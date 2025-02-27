@@ -38,6 +38,7 @@ static void           socket_connect(int sockfd, struct sockaddr_storage *addr, 
 static void           socket_close(int client_fd);
 static void           sigint_handler(int signum);
 static void           setup_signal_handler(void);
+static int            process_commands(int sockfd);
 
 #define UNKNOWN_OPTION_MESSAGE_LEN 24
 #define BASE_TEN 10
@@ -62,6 +63,13 @@ int main(int argc, char *argv[])
 
     setup_signal_handler();
 
+    process_commands(sockfd);
+
+    return EXIT_SUCCESS;
+}
+
+static int process_commands(int sockfd)
+{
     while(!exit_flag)
     {
         fd_set readfds;
@@ -160,10 +168,8 @@ int main(int argc, char *argv[])
             }
         }
     }
-
     socket_close(sockfd);
-
-    return EXIT_SUCCESS;
+    return 0;
 }
 
 static void parse_arguments(int argc, char *argv[], char **ip_address, char **port)
